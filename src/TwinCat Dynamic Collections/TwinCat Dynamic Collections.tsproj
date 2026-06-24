@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.71">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.24">
 	<Project ProjectGUID="{AA44BF3E-9AE7-4A37-9C2A-219EE971CF2F}" Target64Bit="true" ShowHideConfigurations="#x3c7">
 		<System>
 			<Settings MaxCpus="12" RouterMemory="67108864"/>
@@ -19,7 +19,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{1C1CF391-AD49-4301-B41D-3891FAA7DC78}" Name="TcDynCollections" PrjFilePath="TcDynCollections\TcDynCollections.plcproj" TmcFilePath="TcDynCollections\TcDynCollections.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x001e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TcDynCollections\TcDynCollections.tmc" TmcHash="{0A0858D0-0DEA-AA81-7DDB-CB012AF5F6B9}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{28BFC1B0-BF6D-5B21-4597-54584BB3CEC0}" TmcPath="TcDynCollections\TcDynCollections.tmc">
 					<Name>TcDynCollections Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>
@@ -33,13 +33,14 @@
 							<CycleTime>10000000</CycleTime>
 						</Context>
 					</Contexts>
+					<JsonDynPous><![CDATA[null]]></JsonDynPous>
 					<TaskPouOids>
 						<TaskPouOid Prio="20" OTCID="#x08502001"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
 			<Project GUID="{B9F9D0EB-C791-4800-B43F-0927762498E9}" Name="TcDynCollectionsTest" PrjFilePath="TcDynCollectionsTest\TcDynCollectionsTest.plcproj" TmcFilePath="TcDynCollectionsTest\TcDynCollectionsTest.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TcDynCollectionsTest\TcDynCollectionsTest.tmc" TmcHash="{50BD1FD1-75A8-2C3C-747F-9DE468942238}">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{A28BFAE1-A78E-8D4B-E64B-B4FEDA8463C8}" TmcPath="TcDynCollectionsTest\TcDynCollectionsTest.tmc">
 					<Name>TcDynCollectionsTest Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>
@@ -53,9 +54,17 @@
 							<CycleTime>10000000</CycleTime>
 						</Context>
 					</Contexts>
+					<JsonDynPous><![CDATA[null]]></JsonDynPous>
 					<TaskPouOids>
 						<TaskPouOid Prio="20" OTCID="#x08502041"/>
 					</TaskPouOids>
+				</Instance>
+			</Project>
+			<Project GUID="{BC994085-3B01-480D-AB11-95935FC773EE}" Name="TcUnit" PrjFilePath="..\..\..\TcUnit\TcUnit\TcUnit\TcUnit.plcproj" TmcFilePath="..\..\..\TcUnit\TcUnit\TcUnit\TcUnit.tmc" ReloadTmc="true" AmsPort="853" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502080" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{15BB13A7-420C-1AA2-9139-B96BBA1270F3}" TmcPath="..\..\..\TcUnit\TcUnit\TcUnit\TcUnit.tmc">
+					<Name>TcUnit Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<JsonDynPous><![CDATA[null]]></JsonDynPous>
 				</Instance>
 			</Project>
 		</Plc>
