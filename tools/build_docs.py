@@ -698,41 +698,45 @@ def _rst_for_alias(name: str, docstring: str, sig: str) -> str:
 
 # ── Project metadata from generated files ────────────────────────────────────
 
-def read_project_info(proj_dir: Path) -> dict:
+def read_project_info(plcproj: Path) -> dict:
     """
-    Extract version, title, and company from the auto-generated TwinCAT files.
-    Falls back to defaults if any file is missing.
+    Extract title, company, description, and version from the .plcproj
+    <PropertyGroup>. Falls back to Global_Version.TcGVL for version if the
+    plcproj doesn't have one, and to safe defaults for anything missing.
     """
-    info = {"version": "0.0.0", "title": "Library", "company": ""}
+    info = {"version": "0.0.0", "title": "Library", "company": "", "description": ""}
 
-    # Version from Global_Version.TcGVL
-    gvl_candidates = list(proj_dir.rglob("Global_Version.TcGVL"))
-    if gvl_candidates:
-        try:
-            tree = ET.parse(gvl_candidates[0])
-            decl = tree.find('.//Declaration')
-            if decl is not None and decl.text:
-                m = re.search(r"sVersion\s*:=\s*'([^']+)'", decl.text)
-                if m:
-                    info["version"] = m.group(1)
-        except Exception:
-            pass
+    try:
+        tree = ET.parse(plcproj)
+        root = tree.getroot()
+        ns = "http://schemas.microsoft.com/developer/msbuild/2003"
+        for tag, key in [("Title", "title"), ("Company", "company"),
+                         ("Description", "description"), ("Version", "version")]:
+            el = root.find(f".//{tag}")
+            if el is None:
+                el = root.find(f".//{{{ns}}}{tag}")
+            if el is not None and el.text and el.text.strip():
+                info[key] = el.text.strip()
+    except Exception:
+        pass
 
-    # Company and title from F_GetCompany / F_GetTitle implementations
-    for fname, key in [("F_GetCompany.TcPOU", "company"), ("F_GetTitle.TcPOU", "title")]:
-        candidates = list(proj_dir.rglob(fname))
-        if candidates:
+    # If plcproj had no version, try Global_Version.TcGVL
+    if info["version"] == "0.0.0":
+        proj_dir = plcproj.parent
+        gvl_candidates = list(proj_dir.rglob("Global_Version.TcGVL"))
+        if gvl_candidates:
             try:
-                tree = ET.parse(candidates[0])
-                st = tree.find('.//ST')
-                if st is not None and st.text:
-                    m = re.search(r':=\s*"([^"]+)"', st.text)
+                tree2 = ET.parse(gvl_candidates[0])
+                decl = tree2.find(".//Declaration")
+                if decl is not None and decl.text:
+                    m = re.search(r"sVersion\s*:=\s*\'([^\']+)\'", decl.text)
                     if m:
-                        info[key] = m.group(1)
+                        info["version"] = m.group(1)
             except Exception:
                 pass
 
     return info
+
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
@@ -894,11 +898,12 @@ def main():
     # Top-level folder names (for the root toctree)
     top_folders = sorted({fk.split('/')[0] for fk in all_folders})
 
-        # Read project metadata from the auto-generated TwinCAT files
-    meta = read_project_info(PROJ_DIR)
+    # Read project metadata from the .plcproj
+    meta = read_project_info(PLCPROJ)
     lib_title   = meta["title"]
     lib_version = meta["version"]
     lib_company = meta["company"]
+    lib_desc    = meta["description"]
     print(f"  project: {lib_title} v{lib_version} ({lib_company})")
 
     # Write conf.py so version stays in sync with Global_Version.TcGVL
@@ -927,11 +932,12 @@ def main():
     # Write root index.rst
     title_bar = "=" * len(lib_title)
     toc_entries = "".join(f"   {rst_safe(top)}/index\n" for top in top_folders)
+    description_line = lib_desc if lib_desc else ""
     root_idx = (
         f"{lib_title}\n{title_bar}\n\n"
-        "A library of composable building blocks for modelling and building control systems in TwinCAT.\n\n"
-        f":Company: {lib_company}\n"
-        f":Version: {lib_version}\n\n"
+        + (f"{description_line}\n\n" if description_line else "")
+        + f":Company: {lib_company}\n"
+        + f":Version: {lib_version}\n\n"
         ".. toctree::\n"
         "   :maxdepth: 2\n"
         "   :caption: Contents\n\n"
