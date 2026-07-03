@@ -711,7 +711,7 @@ def read_project_info(plcproj: Path) -> dict:
         root = tree.getroot()
         ns = "http://schemas.microsoft.com/developer/msbuild/2003"
         for tag, key in [("Title", "title"), ("Company", "company"),
-                         ("Description", "description"), ("Version", "version")]:
+                         ("Description", "description"), ("ProjectVersion", "version")]:
             el = root.find(f".//{tag}")
             if el is None:
                 el = root.find(f".//{{{ns}}}{tag}")
