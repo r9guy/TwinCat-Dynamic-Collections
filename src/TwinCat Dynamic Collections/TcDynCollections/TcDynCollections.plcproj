@@ -2909,7 +2909,7 @@
             <v>MaxStaticAnalysisWarnings</v>
             <v>500U</v>
             <v>PerformStaticAnalyse</v>
-            <v>false</v>
+            <v>true</v>
             <v>PrecompileGeneral</v>
             <v>true</v>
             <v>SuppressedKeywords</v>
